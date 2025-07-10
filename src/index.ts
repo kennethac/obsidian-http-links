@@ -11,16 +11,26 @@
  * Learn more at https://developers.cloudflare.com/workers/
  */
 
+const pathRegex = /^\/v\/([^/]+)\/r\/(.+)$/;
+
 export default {
 	async fetch(request, env, ctx): Promise<Response> {
+		if (request.method !== 'GET') {
+			return new Response('Method Not Allowed', { status: 405 });
+		}
 		const url = new URL(request.url);
-		switch (url.pathname) {
-			case '/message':
-				return new Response('Hello, World!');
-			case '/random':
-				return new Response(crypto.randomUUID());
-			default:
-				return new Response('Not Found', { status: 404 });
+		const pathName = url.pathname;
+		console.log(`Received request for path: ${pathName}`);
+		const match = pathName.match(pathRegex);
+
+		if (match) {
+			const vaultName = match[1];
+			const file = match[2];
+			const obsidianUrl = `obsidian://open?vault=${vaultName}&file=${file}`;
+			console.log(`Redirecting to Obsidian URL: ${obsidianUrl}`);
+			return Response.redirect(obsidianUrl, 302);
+		} else {
+			return new Response('Not Found', { status: 404 });
 		}
 	},
 } satisfies ExportedHandler<Env>;
