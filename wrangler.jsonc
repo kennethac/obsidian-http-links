@@ -7,12 +7,17 @@
 	"name": "obsidian-http-links",
 	"main": "src/index.ts",
 	"compatibility_date": "2025-07-09",
-	"compatibility_flags": [
-		"global_fetch_strictly_public"
-	],
+	"compatibility_flags": ["global_fetch_strictly_public"],
 	"assets": {
 		"directory": "./public"
 	},
+	"routes": [
+		{
+			// If you fork this repository, change this to your own domain.
+			"pattern": "obsidian-links.kennethchristensen.me",
+			"custom_domain": true
+		}
+	],
 	"observability": {
 		"enabled": true
 	}
